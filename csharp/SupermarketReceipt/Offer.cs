@@ -1,3 +1,5 @@
+using System;
+
 namespace SupermarketReceipt
 {
     public enum SpecialOfferType
@@ -102,7 +104,24 @@ namespace SupermarketReceipt
 
         public static Offer For(SpecialOfferType offerType, Product product, double argument)
         {
-            return new Offer(offerType, product, argument);
+            switch (offerType)
+            {
+                case SpecialOfferType.ThreeForTwo:
+                    return new ThreeForTwoOffer(offerType, product, argument);
+                case SpecialOfferType.TenPercentDiscount:
+                case SpecialOfferType.TwoForAmount:
+                case SpecialOfferType.FiveForAmount:
+                default:
+                    return new Offer(offerType, product, argument);
+            }
+        }
+    }
+
+    class ThreeForTwoOffer : Offer
+    {
+        public ThreeForTwoOffer(SpecialOfferType offerType, Product product, double argument) 
+            : base(offerType, product, argument)
+        {
         }
     }
 }
