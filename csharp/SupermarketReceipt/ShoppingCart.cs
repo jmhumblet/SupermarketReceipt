@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -73,12 +74,17 @@ namespace SupermarketReceipt
                     case SpecialOfferType.FiveForAmount:
                         quantityPerOffer = 5;
                         break;
+
+                    case SpecialOfferType.TenPercentDiscount:
+                        discount = new Discount(p, offer.Argument + "% off", -quantity * unitPrice * offer.Argument / 100.0);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 var numberOfXs = quantityAsInt / quantityPerOffer;
 
 
-                if (offer.OfferType == SpecialOfferType.TenPercentDiscount) discount = new Discount(p, offer.Argument + "% off", -quantity * unitPrice * offer.Argument / 100.0);
                 if (offer.OfferType == SpecialOfferType.FiveForAmount && quantityAsInt >= 5)
                 {
                     var discountTotal = unitPrice * quantity - (offer.Argument * numberOfXs + quantityAsInt % 5 * unitPrice);
