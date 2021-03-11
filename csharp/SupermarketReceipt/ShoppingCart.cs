@@ -43,14 +43,15 @@ namespace SupermarketReceipt
                 var offer = offers[p];
                 var unitPrice = catalog.GetUnitPrice(p);
                 
-                var discount = Discount(offer, quantity, unitPrice, p);
+                var discount = DefineDiscount(offer, quantity, unitPrice, p);
 
                 if (discount != null)
                     receipt.AddDiscount(discount);
             }
         }
 
-        private static Discount Discount(Offer offer, double quantity, double unitPrice, Product p)
+        //Find, apply, OfferToDiscount, DefineDiscount
+        private static Discount DefineDiscount(Offer offer, double quantity, double unitPrice, Product p)
         {
             int quantityAsInt = (int)quantity;
             Discount discount = null;
