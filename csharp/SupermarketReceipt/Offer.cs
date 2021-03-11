@@ -10,11 +10,11 @@ namespace SupermarketReceipt
         FiveForAmount
     }
 
-    public class Offer
+    public abstract class Offer
     {
         private Product _product;
 
-        public Offer(SpecialOfferType offerType, Product product, double argument)
+        protected Offer(SpecialOfferType offerType, Product product, double argument)
         {
             OfferType = offerType;
             Argument = argument;
@@ -24,10 +24,7 @@ namespace SupermarketReceipt
         public SpecialOfferType OfferType { get; }
         public double Argument { get; }
 
-        public virtual Discount DefineDiscount(double quantity, double unitPrice, Product product)
-        {
-            return null;
-        }
+        public abstract Discount DefineDiscount(double quantity, double unitPrice, Product product);
 
         public static Offer For(SpecialOfferType offerType, Product product, double argument)
         {
@@ -42,7 +39,7 @@ namespace SupermarketReceipt
                 case SpecialOfferType.FiveForAmount:
                     return new FiveForAmountOffer(product, argument);
                 default:
-                    return new Offer(offerType, product, argument);
+                    return null;
             }
         }
     }
