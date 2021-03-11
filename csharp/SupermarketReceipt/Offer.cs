@@ -24,13 +24,23 @@ namespace SupermarketReceipt
         public SpecialOfferType OfferType { get; }
         public double Argument { get; }
 
-        public Discount DefineDiscount(double quantity, double unitPrice, Product product)
+        public virtual Discount DefineDiscount(double quantity, double unitPrice, Product product)
         {
             switch (OfferType)
             {
                 case SpecialOfferType.ThreeForTwo:
                 {
-                    return DefineThreeForTwoDiscount(this, quantity, unitPrice, product);
+                    const int quantityPerOfferThreeForTwo = 3;
+
+                    var numberOfXsThreeForTwo = (int) quantity / quantityPerOfferThreeForTwo;
+                    if (this.OfferType == SpecialOfferType.ThreeForTwo && (int) quantity > 2)
+                    {
+                        var discountAmount = quantity * unitPrice -
+                                             (numberOfXsThreeForTwo * 2 * unitPrice + (int) quantity % 3 * unitPrice);
+                        return new Discount(product, "3 for 2", -discountAmount);
+                    }
+
+                    return null;
                 }
                 case SpecialOfferType.TwoForAmount:
                 {
@@ -87,21 +97,6 @@ namespace SupermarketReceipt
             return null;
         }
 
-        private static Discount DefineThreeForTwoDiscount(Offer offer, double quantity, double unitPrice, Product product)
-        {
-            const int quantityPerOfferThreeForTwo = 3;
-
-            var numberOfXsThreeForTwo = (int) quantity / quantityPerOfferThreeForTwo;
-            if (offer.OfferType == SpecialOfferType.ThreeForTwo && (int) quantity > 2)
-            {
-                var discountAmount = quantity * unitPrice -
-                                     (numberOfXsThreeForTwo * 2 * unitPrice + (int) quantity % 3 * unitPrice);
-                return new Discount(product, "3 for 2", -discountAmount);
-            }
-
-            return null;
-        }
-
         public static Offer For(SpecialOfferType offerType, Product product, double argument)
         {
             switch (offerType)
@@ -149,6 +144,21 @@ namespace SupermarketReceipt
         public ThreeForTwoOffer(Product product, double argument) 
             : base(SpecialOfferType.ThreeForTwo, product, argument)
         {
+        }
+
+        public override Discount DefineDiscount(double quantity, double unitPrice, Product product)
+        {
+            const int quantityPerOfferThreeForTwo = 3;
+
+            var numberOfXsThreeForTwo = (int) quantity / quantityPerOfferThreeForTwo;
+            if (this.OfferType == SpecialOfferType.ThreeForTwo && (int) quantity > 2)
+            {
+                var discountAmount = quantity * unitPrice -
+                                     (numberOfXsThreeForTwo * 2 * unitPrice + (int) quantity % 3 * unitPrice);
+                return new Discount(product, "3 for 2", -discountAmount);
+            }
+
+            return null;
         }
     }
 }
