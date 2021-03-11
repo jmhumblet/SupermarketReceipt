@@ -109,11 +109,20 @@ namespace SupermarketReceipt
                 case SpecialOfferType.ThreeForTwo:
                     return new ThreeForTwoOffer(product, argument);
                 case SpecialOfferType.TenPercentDiscount:
+                    return new TenPercentDiscountOffer(product, argument);
                 case SpecialOfferType.TwoForAmount:
                 case SpecialOfferType.FiveForAmount:
                 default:
                     return new Offer(offerType, product, argument);
             }
+        }
+    }
+
+    class TenPercentDiscountOffer : Offer
+    {
+        public TenPercentDiscountOffer(Product product, double argument) 
+            : base(SpecialOfferType.TenPercentDiscount, product, argument)
+        {
         }
     }
 
