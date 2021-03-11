@@ -107,7 +107,7 @@ namespace SupermarketReceipt
             switch (offerType)
             {
                 case SpecialOfferType.ThreeForTwo:
-                    return new ThreeForTwoOffer(offerType, product, argument);
+                    return new ThreeForTwoOffer(product, argument);
                 case SpecialOfferType.TenPercentDiscount:
                 case SpecialOfferType.TwoForAmount:
                 case SpecialOfferType.FiveForAmount:
@@ -119,8 +119,8 @@ namespace SupermarketReceipt
 
     class ThreeForTwoOffer : Offer
     {
-        public ThreeForTwoOffer(SpecialOfferType offerType, Product product, double argument) 
-            : base(offerType, product, argument)
+        public ThreeForTwoOffer(Product product, double argument) 
+            : base(SpecialOfferType.ThreeForTwo, product, argument)
         {
         }
     }
