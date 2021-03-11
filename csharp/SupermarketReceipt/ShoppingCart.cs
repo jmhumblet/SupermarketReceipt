@@ -73,24 +73,22 @@ namespace SupermarketReceipt
                     }
                     case SpecialOfferType.FiveForAmount:
                         quantityPerOffer = 5;
+
+                        var numberOfXsFiveForAmount = quantityAsInt / quantityPerOffer;
+
+
+                        if (offer.OfferType == SpecialOfferType.FiveForAmount && quantityAsInt >= 5)
+                        {
+                            var discountTotal = unitPrice * quantity - (offer.Argument * numberOfXsFiveForAmount + quantityAsInt % 5 * unitPrice);
+                            discount = new Discount(p, quantityPerOffer + " for " + offer.Argument, -discountTotal);
+                        }
                         break;
 
                     case SpecialOfferType.TenPercentDiscount:
                         discount = new Discount(p, offer.Argument + "% off", -quantity * unitPrice * offer.Argument / 100.0);
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
-
-                var numberOfXs = quantityAsInt / quantityPerOffer;
-
-
-                if (offer.OfferType == SpecialOfferType.FiveForAmount && quantityAsInt >= 5)
-                {
-                    var discountTotal = unitPrice * quantity - (offer.Argument * numberOfXs + quantityAsInt % 5 * unitPrice);
-                    discount = new Discount(p, quantityPerOffer + " for " + offer.Argument, -discountTotal);
-                }
-
+                
                 if (discount != null)
                     receipt.AddDiscount(discount);
             }
