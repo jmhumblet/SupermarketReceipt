@@ -14,7 +14,7 @@ namespace SupermarketReceipt
 
         public void AddSpecialOffer(SpecialOfferType offerType, Product product, double argument)
         {
-            _offers[product] = new Offer(offerType, product, argument);
+            _offers[product] = Offer.For(offerType, product, argument);
         }
 
         public Receipt ChecksOutArticlesFrom(ShoppingCart theCart)

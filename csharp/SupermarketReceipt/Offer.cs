@@ -99,5 +99,10 @@ namespace SupermarketReceipt
 
             return null;
         }
+
+        public static Offer For(SpecialOfferType offerType, Product product, double argument)
+        {
+            return new Offer(offerType, product, argument);
+        }
     }
 }
