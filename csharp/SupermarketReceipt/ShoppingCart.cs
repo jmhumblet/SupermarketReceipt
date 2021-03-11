@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -50,15 +51,14 @@ namespace SupermarketReceipt
             }
         }
 
-        //Find, apply, OfferToDiscount, DefineDiscount
         private static Discount DefineDiscount(Offer offer, double quantity, double unitPrice, Product p)
         {
             int quantityAsInt = (int)quantity;
-            Discount discount = null;
 
             switch (offer.OfferType)
             {
                 case SpecialOfferType.ThreeForTwo:
+                {
                     const int quantityPerOfferThreeForTwo = 3;
 
                     var numberOfXsThreeForTwo = quantityAsInt / quantityPerOfferThreeForTwo;
@@ -66,11 +66,11 @@ namespace SupermarketReceipt
                     {
                         var discountAmount = quantity * unitPrice -
                                              (numberOfXsThreeForTwo * 2 * unitPrice + quantityAsInt % 3 * unitPrice);
-                        discount = new Discount(p, "3 for 2", -discountAmount);
+                        return new Discount(p, "3 for 2", -discountAmount);
                     }
 
-                    break;
-
+                    return null;
+                }
                 case SpecialOfferType.TwoForAmount:
                 {
                     const int quantityPerOfferTwoForAmount = 2;
@@ -79,12 +79,13 @@ namespace SupermarketReceipt
                         var total = offer.Argument * (quantityAsInt / quantityPerOfferTwoForAmount) +
                                     quantityAsInt % 2 * unitPrice;
                         var discountN = unitPrice * quantity - total;
-                        discount = new Discount(p, "2 for " + offer.Argument, -discountN);
+                        return new Discount(p, "2 for " + offer.Argument, -discountN);
                     }
 
-                    break;
+                    return null;
                 }
                 case SpecialOfferType.FiveForAmount:
+                {
                     const int quantityPerOfferFiveForAmount = 5;
 
                     var numberOfXsFiveForAmount = quantityAsInt / quantityPerOfferFiveForAmount;
@@ -94,17 +95,20 @@ namespace SupermarketReceipt
                     {
                         var discountTotal = unitPrice * quantity -
                                             (offer.Argument * numberOfXsFiveForAmount + quantityAsInt % 5 * unitPrice);
-                        discount = new Discount(p, quantityPerOfferFiveForAmount + " for " + offer.Argument, -discountTotal);
+                        return new Discount(p, quantityPerOfferFiveForAmount + " for " + offer.Argument, -discountTotal);
                     }
 
-                    break;
-
+                    return null;
+                }
                 case SpecialOfferType.TenPercentDiscount:
-                    discount = new Discount(p, offer.Argument + "% off", -quantity * unitPrice * offer.Argument / 100.0);
-                    break;
+                {
+                    return new Discount(p, offer.Argument + "% off", -quantity * unitPrice * offer.Argument / 100.0);
+                }
+                default:
+                {
+                    return null;
+                }
             }
-
-            return discount;
         }
     }
 }
